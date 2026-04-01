@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Enterprise Rental Car Request — Holden Forests & Gardens</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:system-ui,sans-serif;background:#f4f7f0;padding:24px 16px;color:#27500A;}
+  .wrap{max-width:600px;margin:0 auto;}
+  .header{background:#3B6D11;border-radius:14px;padding:20px 24px;display:flex;align-items:center;gap:16px;margin-bottom:24px;}
+  .header h1{font-size:20px;font-weight:500;color:#fff;margin-bottom:3px;}
+  .header p{font-size:13px;color:#C0DD9799;}
+  .section{background:#fff;border:1px solid #63992233;border-radius:12px;overflow:hidden;margin-bottom:20px;}
+  .section-head{background:#EAF3DE;padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #63992233;}
+  .section-head h2{font-size:14px;font-weight:500;color:#27500A;letter-spacing:0.03em;}
+  .section-body{padding:16px;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .field{margin-bottom:14px;}
+  .field label{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:#3B6D11;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em;}
+  .field input,.field select,.field textarea{width:100%;padding:8px 12px;font-size:14px;border-radius:8px;border:1px solid #63992244;background:#fff;color:#27500A;font-family:inherit;outline:none;}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:#3B6D11;}
+  .field textarea{resize:vertical;}
+  .hint{font-size:12px;color:#5F5E5A;margin-top:4px;}
+  .error{font-size:12px;color:#A32D2D;margin-top:4px;padding-left:6px;border-left:2px solid #E24B4A;}
+  .hours-tag{margin-top:6px;padding:6px 10px;background:#FAEEDA;border-radius:6px;font-size:12px;color:#854F0B;border:1px solid #BA751744;}
+  .dropbox-badge{margin-left:8px;background:#EAF3DE;color:#3B6D11;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:500;}
+  .warn-box{background:#FAEEDA;border:1px solid #BA751766;border-radius:8px;padding:8px 12px;font-size:13px;color:#854F0B;margin-top:8px;display:flex;gap:8px;}
+  .info-box{background:#EAF3DE;border:1px solid #63992266;border-radius:8px;padding:8px 12px;font-size:13px;color:#3B6D11;margin-top:8px;display:flex;gap:8px;}
+  .note-box{border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start;}
+  .note-green{background:#EAF3DE;border:1px solid #63992255;color:#3B6D11;}
+  .note-amber{background:#FAEEDA;border:1px solid #BA751755;color:#854F0B;}
+  .checkbox-row{display:flex;align-items:center;gap:8px;font-size:13px;color:#3B6D11;margin-bottom:8px;cursor:pointer;}
+  .checkbox-row input{width:15px;height:15px;accent-color:#3B6D11;cursor:pointer;}
+  .submit-btn{width:100%;padding:13px;border-radius:10px;border:none;font-size:15px;font-weight:500;letter-spacing:0.02em;cursor:pointer;transition:background 0.2s;}
+  .submit-btn.active{background:#3B6D11;color:#fff;}
+  .submit-btn.inactive{background:#F1EFE8;color:#5F5E5A;cursor:not-allowed;}
+  .success{text-align:center;padding:2rem 1rem;}
+  .success-icon{width:64px;height:64px;border-radius:50%;background:#EAF3DE;border:2px solid #639922;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;}
+  .success h2{font-size:18px;font-weight:500;color:#27500A;margin-bottom:8px;}
+  .success p{color:#5F5E5A;font-size:14px;margin-bottom:24px;}
+  .send-btn{display:inline-block;padding:11px 28px;border-radius:8px;background:#3B6D11;color:#fff;font-weight:500;font-size:14px;text-decoration:none;letter-spacing:0.02em;}
+  .reset-btn{background:none;border:none;color:#5F5E5A;font-size:13px;cursor:pointer;margin-top:12px;display:block;margin-left:auto;margin-right:auto;}
+  .preview{margin-top:24px;text-align:left;background:#F1EFE8;border-radius:10px;padding:14px 16px;border:1px solid #63992233;}
+  .preview p{font-size:11px;font-weight:500;color:#5F5E5A;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;}
+  .preview pre{font-size:12px;color:#27500A;white-space:pre-wrap;font-family:monospace;}
+  @media(max-width:500px){.two-col{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="24" fill="#639922" opacity="0.2"/>
+      <polygon points="24,6 30,22 24,18 18,22" fill="#fff"/>
+      <polygon points="24,16 32,34 24,28 16,34" fill="#EAF3DE"/>
+      <rect x="22" y="34" width="4" height="6" fill="#BA7517" rx="2"/>
+      <path d="M8 40 Q12 36 16 38 Q20 40 24 38 Q28 36 32 38 Q36 40 40 40" stroke="#EAF3DE" stroke-width="1.5" fill="none" opacity="0.6"/>
+    </svg>
+    <div>
+      <h1>Enterprise rental car request</h1>
+      <p>Holden Forests & Gardens — vehicle reservation form</p>
+    </div>
+  </div>
+
+  <div id="form-view">
+    <div class="section">
+      <div class="section-head"><span>🧭</span><h2>Renter information</h2></div>
+      <div class="section-body">
+        <div class="two-col">
+          <div class="field"><label>&#127807; Full name <span style="color:#E24B4A">*</span></label><input type="text" id="renterName" placeholder="Jane Smith"/></div>
+          <div class="field"><label>&#127807; Phone number <span style="color:#E24B4A">*</span></label><input type="tel" id="phone" placeholder="(555) 000-0000"/></div>
+        </div>
+        <div class="field"><label>&#127807; Email address <span style="color:#E24B4A">*</span></label><input type="email" id="email" placeholder="jane@holdenforests.org"/></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span>🌄</span><h2>Pick-up details</h2></div>
+      <div class="section-body">
+        <div class="field"><label>&#127807; Pick-up location <span style="color:#E24B4A">*</span></label>
+          <select id="pickupLocation" onchange="onPickupLocChange()">
+            <option value="">Select an Enterprise location...</option>
+            <option value="CLE Airport — 19601 Maplewood Ave, Cleveland">CLE Airport — 19601 Maplewood Ave, Cleveland [drop box]</option>
+            <option value="Superior Ave — 1802 Superior Ave E, Cleveland">Superior Ave — 1802 Superior Ave E, Cleveland</option>
+            <option value="Cleveland Heights — 3200 Mayfield Rd">Cleveland Heights — 3200 Mayfield Rd [drop box]</option>
+            <option value="Brook Park — 13200 Brookpark Rd">Brook Park — 13200 Brookpark Rd</option>
+            <option value="Lakewood — 2285 Warren Rd">Lakewood — 2285 Warren Rd</option>
+            <option value="Bedford — 19550 Rockside Rd">Bedford — 19550 Rockside Rd [drop box]</option>
+            <option value="Euclid — 25080 Lakeland Blvd">Euclid — 25080 Lakeland Blvd</option>
+            <option value="Parma — 7800 Broadview Rd">Parma — 7800 Broadview Rd</option>
+            <option value="University Circle — 1986 Stokes Blvd, Cleveland">University Circle — 1986 Stokes Blvd, Cleveland</option>
+            <option value="__other__">Other — type in a location</option>
+          </select>
+          <input type="text" id="pickupOther" placeholder="Enter Enterprise location name or address" style="display:none;margin-top:8px"/>
+          <div id="pickupHours" class="hours-tag" style="display:none"></div>
+        </div>
+        <div class="two-col">
+          <div class="field"><label>&#127807; Pick-up date <span style="color:#E24B4A">*</span></label>
+            <input type="date" id="pickupDate" onchange="validateTimes()"/>
+            <div id="pickupDateErr" class="error" style="display:none"></div>
+          </div>
+          <div class="field"><label>&#127807; Pick-up time <span style="color:#E24B4A">*</span></label>
+            <input type="time" id="pickupTime" onchange="validateTimes()"/>
+            <div id="pickupTimeHint" class="hint" style="display:none"></div>
+            <div id="pickupTimeErr" class="error" style="display:none"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span>🏕️</span><h2>Drop-off details</h2></div>
+      <div class="section-body">
+        <div class="field"><label>&#127807; Drop-off location <span style="color:#E24B4A">*</span></label>
+          <label class="checkbox-row"><input type="checkbox" id="sameDropoff" checked onchange="toggleDropoff()"/> Same as pick-up location</label>
+          <div id="dropoffLocWrap" style="display:none">
+            <select id="dropoffLocation" onchange="onDropoffLocChange()">
+              <option value="">Select an Enterprise location...</option>
+              <option value="CLE Airport — 19601 Maplewood Ave, Cleveland">CLE Airport — 19601 Maplewood Ave, Cleveland [drop box]</option>
+              <option value="Superior Ave — 1802 Superior Ave E, Cleveland">Superior Ave — 1802 Superior Ave E, Cleveland</option>
+              <option value="Cleveland Heights — 3200 Mayfield Rd">Cleveland Heights — 3200 Mayfield Rd [drop box]</option>
+              <option value="Brook Park — 13200 Brookpark Rd">Brook Park — 13200 Brookpark Rd</option>
+              <option value="Lakewood — 2285 Warren Rd">Lakewood — 2285 Warren Rd</option>
+              <option value="Bedford — 19550 Rockside Rd">Bedford — 19550 Rockside Rd [drop box]</option>
+              <option value="Euclid — 25080 Lakeland Blvd">Euclid — 25080 Lakeland Blvd</option>
+              <option value="Parma — 7800 Broadview Rd">Parma — 7800 Broadview Rd</option>
+              <option value="University Circle — 1986 Stokes Blvd, Cleveland">University Circle — 1986 Stokes Blvd, Cleveland</option>
+              <option value="__other__">Other — type in a location</option>
+            </select>
+            <input type="text" id="dropoffOther" placeholder="Enter Enterprise location name or address" style="display:none;margin-top:8px"/>
+            <div id="dropoffHours" class="hours-tag" style="display:none"></div>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="field"><label>&#127807; Drop-off date <span style="color:#E24B4A">*</span></label>
+            <input type="date" id="dropoffDate" onchange="validateTimes()"/>
+            <div id="dropoffDateErr" class="error" style="display:none"></div>
+          </div>
+          <div class="field"><label>&#127807; Drop-off time <span style="color:#E24B4A">*</span></label>
+            <input type="time" id="dropoffTime" onchange="validateTimes()"/>
+            <div id="dropoffTimeHint" class="hint" style="display:none"></div>
+            <div id="dropoffTimeErr" class="error" style="display:none"></div>
+          </div>
+        </div>
+        <div id="dropoffInfoBox" style="display:none"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span>🚙</span><h2>Vehicle details</h2></div>
+      <div class="section-body">
+        <div class="two-col">
+          <div class="field"><label>&#127807; Car type <span style="color:#E24B4A">*</span></label>
+            <select id="carType">
+              <option value="">Select type...</option>
+              <option>Car (standard)</option>
+              <option>SUV</option>
+              <option>Minivan</option>
+              <option>Truck</option>
+            </select>
+          </div>
+          <div class="field"><label>&#127807; Passengers <span style="color:#E24B4A">*</span></label>
+            <select id="passengers">
+              <option value="">Select...</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option>
+              <option>5</option><option>6</option><option>7</option><option>8</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label>&#127807; Additional driver?</label>
+          <select id="addlDriver">
+            <option value="no">No</option>
+            <option value="yes">Yes — will register at pickup</option>
+          </select>
+          <div class="hint">May incur extra charges — register at pickup</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field"><label>&#127807; Additional notes</label>
+      <textarea id="notes" rows="3" placeholder="Special requests, travel details, etc."></textarea>
+    </div>
+
+    <div class="note-box note-green">
+      <span style="font-size:16px;flex-shrink:0">🌿</span>
+      <span><strong>Reminders:</strong> Pick-up must be within operating hours. Drop-off can be after hours at locations with a drop box. Adding extra drivers may incur charges. You'll get a confirmation email once reserved.</span>
+    </div>
+    <div class="note-box note-amber">
+      <span style="font-size:16px;flex-shrink:0">📧</span>
+      <span><strong>How to submit:</strong> After completing the form, click <strong>"Review & send request"</strong> below, then click <strong>"Send request"</strong> on the next page. Your email client will open with all reservation details already filled in — all you have to do is click <strong>Send</strong>.</span>
+    </div>
+
+    <button class="submit-btn inactive" id="submitBtn" onclick="trySubmit()">Complete all required fields to continue</button>
+  </div>
+
+  <div id="success-view" class="success" style="display:none">
+    <div class="success-icon">🌲</div>
+    <h2>Request ready to send</h2>
+    <p>Your rental request is packed and ready to go. Click below to open it in your email client, then click Send.</p>
+    <a id="mailtoLink" href="#" class="send-btn">Send request →</a>
+    <button class="reset-btn" onclick="resetForm()">Submit another request</button>
+    <div class="preview">
+      <p>Email preview</p>
+      <pre id="previewText"></pre>
+    </div>
+  </div>
+
+</div>
+<script>
+const LOCATIONS = {
+  "CLE Airport — 19601 Maplewood Ave, Cleveland":       {hours:{0:[6,0,23,59],1:[6,0,23,59],2:[6,0,23,59],3:[6,0,23,59],4:[6,0,23,59],5:[6,0,23,59],6:[6,0,23,59]},dropbox:true,phone:"+1 833-511-1749",display:"Mon–Sun: 6:00 AM – 12:30 AM"},
+  "Superior Ave — 1802 Superior Ave E, Cleveland":      {hours:{1:[8,0,18,0],2:[8,0,18,0],3:[8,0,18,0],4:[8,0,18,0],5:[8,0,18,0],6:[9,0,12,0]},dropbox:false,phone:"+1 216-348-0700",display:"Mon–Fri: 8AM–6PM | Sat: 9AM–12PM | Sun: Closed"},
+  "Cleveland Heights — 3200 Mayfield Rd":               {hours:{1:[8,0,18,0],2:[8,0,18,0],3:[8,0,18,0],4:[8,0,18,0],5:[8,0,18,0],6:[9,0,14,0]},dropbox:true,phone:"+1 216-397-7600",display:"Mon–Fri: 8AM–6PM | Sat: 9AM–2PM | Sun: Closed"},
+  "Brook Park — 13200 Brookpark Rd":                    {hours:{1:[8,0,18,0],2:[8,0,18,0],3:[8,0,18,0],4:[8,0,18,0],5:[8,0,18,0],6:[9,0,14,0]},dropbox:false,phone:"+1 216-351-3344",display:"Mon–Fri: 8AM–6PM | Sat: 9AM–2PM | Sun: Closed"},
+  "Lakewood — 2285 Warren Rd":                          {hours:{1:[8,0,18,0],2:[8,0,18,0],3:[8,0,18,0],4:[8,0,18,0],5:[8,0,18,0],6:[9,0,12,0]},dropbox:false,phone:"+1 216-529-1100",display:"Mon–Fri: 8AM–6PM | Sat: 9AM–12PM | Sun: Closed"},
+  "Bedford — 19550 Rockside Rd":                        {hours:{1:[8,0,18,0],2:[8,0,18,0],3:[8,0,18,0],4:[8,0,18,0],5:[8,0,18,0],6:[9,0,14,0]},dropbox:true,phone:"+1 440-786-8500",display:"Mon–Fri: 8AM–6PM | Sat: 9AM–2PM | Sun: Closed"},
+  "Euclid — 25080 Lakeland Blvd":                       {hours:{1:[8,0,18,0],2:[8,0,18,0],3:[8,0,18,0],4:[8,0,18,0],5:[8,0,18,0],6:[9,0,14,0]},dropbox:false,phone:"+1 216-531-8810",display:"Mon–Fri: 8AM–6PM | Sat: 9AM–2PM | Sun: Closed"},
+  "Parma — 7800 Broadview Rd":                          {hours:{1:[8,0,18,0],2:[8,0,18,0],3:[8,0,18,0],4:[8,0,18,0],5:[8,0,18,0],6:[9,0,12,0]},dropbox:false,phone:"+1 216-573-0535",display:"Mon–Fri: 8AM–6PM | Sat: 9AM–12PM | Sun: Closed"},
+  "University Circle — 1986 Stokes Blvd, Cleveland":    {hours:{1:[8,0,17,0],2:[8,0,17,0],3:[8,0,17,0],4:[8,0,17,0],5:[8,0,17,0]},dropbox:false,phone:"+1 440-823-0644",display:"Mon–Fri: 8AM–5PM | Sat–Sun: Closed"},
+};
+const pad=n=>String(n).padStart(2,"0");
+function fmt(t){if(!t)return"";const[h,m]=t.split(":").map(Number);const ap=h>=12?"PM":"AM";return`${h%12||12}:${pad(m)} ${ap}`;}
+function getMinMax(locKey,dateStr){
+  const loc=LOCATIONS[locKey];
+  if(!loc||!dateStr)return{min:null,max:null,closed:false,dropbox:false};
+  const dow=new Date(dateStr+"T12:00:00").getDay();
+  const h=loc.hours[dow];
+  if(!h)return{min:null,max:null,closed:true,dropbox:loc.dropbox};
+  return{min:`${pad(h[0])}:${pad(h[1])}`,max:`${pad(h[2])}:${pad(h[3])}`,closed:false,dropbox:loc.dropbox};
+}
+function inRange(t,mn,mx){return!t||!mn||!mx||(t>=mn&&t<=mx);}
+function showHours(locKey,elId){
+  const el=document.getElementById(elId);
+  const loc=LOCATIONS[locKey];
+  if(!loc){el.style.display="none";return;}
+  el.innerHTML=`🕐 ${loc.display} &nbsp;·&nbsp; 📞 ${loc.phone}${loc.dropbox?'<span class="dropbox-badge">drop box</span>':""}`;
+  el.style.display="block";
+}
+function getPickupLoc(){
+  const v=document.getElementById("pickupLocation").value;
+  return v==="__other__"?null:v;
+}
+function getDropoffLoc(){
+  if(document.getElementById("sameDropoff").checked)return getPickupLoc();
+  const v=document.getElementById("dropoffLocation").value;
+  return v==="__other__"?null:v;
+}
+function onPickupLocChange(){
+  const v=document.getElementById("pickupLocation").value;
+  document.getElementById("pickupOther").style.display=v==="__other__"?"block":"none";
+  showHours(v==="__other__"?null:v,"pickupHours");
+  validateTimes(); checkComplete();
+}
+function onDropoffLocChange(){
+  const v=document.getElementById("dropoffLocation").value;
+  document.getElementById("dropoffOther").style.display=v==="__other__"?"block":"none";
+  showHours(v==="__other__"?null:v,"dropoffHours");
+  validateTimes(); checkComplete();
+}
+function toggleDropoff(){
+  const same=document.getElementById("sameDropoff").checked;
+  document.getElementById("dropoffLocWrap").style.display=same?"none":"block";
+  validateTimes(); checkComplete();
+}
+function setEl(id,text,show){const el=document.getElementById(id);el.textContent=text;el.style.display=show?"block":"none";}
+function setHtml(id,html,show){const el=document.getElementById(id);el.innerHTML=html;el.style.display=show?"block":"none";}
+
+let pickupErr=false, dropoffErr=false;
+function validateTimes(){
+  const puLoc=getPickupLoc();
+  const puDate=document.getElementById("pickupDate").value;
+  const puTime=document.getElementById("pickupTime").value;
+  const drLoc=getDropoffLoc();
+  const drDate=document.getElementById("dropoffDate").value;
+  const drTime=document.getElementById("dropoffTime").value;
+  const pu=getMinMax(puLoc,puDate);
+  const dr=getMinMax(drLoc,drDate);
+
+  pickupErr=false;
+  if(puLoc&&puDate&&pu.closed){setEl("pickupDateErr","This location is closed on the selected day.",true);pickupErr=true;}
+  else setEl("pickupDateErr","",false);
+  if(puLoc&&puTime&&puDate&&!pu.closed){
+    setEl("pickupTimeHint",pu.min?`Hours: ${fmt(pu.min)} – ${fmt(pu.max)}`:"",!!pu.min);
+    if(!inRange(puTime,pu.min,pu.max)){setEl("pickupTimeErr",`Pick-up must be between ${fmt(pu.min)} and ${fmt(pu.max)}.`,true);pickupErr=true;}
+    else setEl("pickupTimeErr","",false);
+  } else { setEl("pickupTimeHint","",false); setEl("pickupTimeErr","",false); }
+
+  dropoffErr=false;
+  document.getElementById("dropoffInfoBox").style.display="none";
+  if(drLoc&&drDate){
+    if(dr.closed&&!dr.dropbox){setEl("dropoffDateErr","Closed this day — no drop box available.",true);dropoffErr=true;}
+    else setEl("dropoffDateErr","",false);
+    if(drTime){
+      if(!dr.closed){
+        setEl("dropoffTimeHint",dr.min?`Hours: ${fmt(dr.min)} – ${fmt(dr.max)}${dr.dropbox?" · drop box avail.":""}`:"",!!dr.min);
+        if(!inRange(drTime,dr.min,dr.max)){
+          if(dr.dropbox){setHtml("dropoffInfoBox",'<div class="info-box"><span>ℹ️</span><span>Outside operating hours — drop box available for after-hours return.</span></div>',true);}
+          else{setEl("dropoffTimeErr",`Drop-off must be between ${fmt(dr.min)} and ${fmt(dr.max)} (no drop box).`,true);dropoffErr=true;}
+        } else setEl("dropoffTimeErr","",false);
+      } else if(dr.closed&&dr.dropbox){
+        setHtml("dropoffInfoBox",'<div class="info-box"><span>ℹ️</span><span>Location closed this day, but a drop box is available for after-hours return.</span></div>',true);
+        setEl("dropoffTimeErr","",false);
+      }
+    } else setEl("dropoffTimeHint","",false);
+  } else { setEl("dropoffDateErr","",false); setEl("dropoffTimeErr","",false); }
+  checkComplete();
+}
+
+function getVal(id){return document.getElementById(id).value.trim();}
+function checkComplete(){
+  const required=["renterName","phone","email","pickupDate","pickupTime","dropoffDate","dropoffTime","carType","passengers"];
+  const puLoc=document.getElementById("pickupLocation").value;
+  const puLocOk=puLoc==="__other__"?!!getVal("pickupOther"):!!puLoc;
+  const same=document.getElementById("sameDropoff").checked;
+  const drLoc=document.getElementById("dropoffLocation").value;
+  const drLocOk=same?true:(drLoc==="__other__"?!!getVal("dropoffOther"):!!drLoc);
+  const allFilled=required.every(id=>!!getVal(id))&&puLocOk&&drLocOk;
+  const ok=allFilled&&!pickupErr&&!dropoffErr;
+  const btn=document.getElementById("submitBtn");
+  btn.className="submit-btn "+(ok?"active":"inactive");
+  btn.textContent=ok?"Review & send request →":"Complete all required fields to continue";
+}
+document.querySelectorAll("input,select,textarea").forEach(el=>el.addEventListener("input",checkComplete));
+
+function trySubmit(){
+  if(document.getElementById("submitBtn").classList.contains("inactive"))return;
+  const name=getVal("renterName");
+  const puLoc=document.getElementById("pickupLocation").value==="__other__"?getVal("pickupOther"):getVal("pickupLocation");
+  const same=document.getElementById("sameDropoff").checked;
+  const drLocRaw=document.getElementById("dropoffLocation").value;
+  const drLoc=same?puLoc:(drLocRaw==="__other__"?getVal("dropoffOther"):drLocRaw);
+  const body=[
+    "ENTERPRISE RENTAL CAR REQUEST","",
+    "RENTER INFORMATION",`Name: ${name}`,`Phone: ${getVal("phone")}`,`Email: ${getVal("email")}`,"",
+    "PICK-UP DETAILS",`Location: ${puLoc}`,`Date: ${getVal("pickupDate")}`,`Time: ${fmt(getVal("pickupTime"))}`,"",
+    "DROP-OFF DETAILS",`Location: ${drLoc}`,`Date: ${getVal("dropoffDate")}`,`Time: ${fmt(getVal("dropoffTime"))}`,"",
+    "VEHICLE DETAILS",`Car type: ${getVal("carType")}`,`Passengers: ${getVal("passengers")}`,`Additional driver: ${document.getElementById("addlDriver").value==="yes"?"Yes (register at pickup)":"No"}`,
+    getVal("notes")?"\nNOTES\n"+getVal("notes"):"",
+  ].join("\n");
+  document.getElementById("previewText").textContent=body;
+  document.getElementById("mailtoLink").href=`mailto:jhughes@holdenfg.org?subject=${encodeURIComponent("Enterprise Rental Car Request — "+name)}&body=${encodeURIComponent(body)}`;
+  document.getElementById("form-view").style.display="none";
+  document.getElementById("success-view").style.display="block";
+}
+function resetForm(){
+  document.getElementById("form-view").style.display="block";
+  document.getElementById("success-view").style.display="none";
+  document.querySelectorAll("input:not([type=checkbox]),select,textarea").forEach(el=>el.value="");
+  document.getElementById("sameDropoff").checked=true;
+  document.getElementById("dropoffLocWrap").style.display="none";
+  document.getElementById("pickupOther").style.display="none";
+  document.getElementById("dropoffOther").style.display="none";
+  document.getElementById("pickupHours").style.display="none";
+  document.getElementById("dropoffHours").style.display="none";
+  checkComplete();
+}
+checkComplete();
+</script>
+</body>
+</html>
