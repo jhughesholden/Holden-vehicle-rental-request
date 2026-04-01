@@ -1,0 +1,304 @@
+import { useState } from "react";
+
+const G = {
+  bark:    "#3B6D11",
+  leaf:    "#639922",
+  moss:    "#EAF3DE",
+  pine:    "#27500A",
+  gold:    "#BA7517",
+  sand:    "#FAEEDA",
+  trail:   "#854F0B",
+  sky:     "#E6F1FB",
+  stone:   "#5F5E5A",
+  pebble:  "#F1EFE8",
+};
+
+const LOCATIONS = [
+  { label: "CLE Airport — 19601 Maplewood Ave, Cleveland", phone: "+1 833-511-1749", dropbox: true,
+    hours: { 0:[6,0,23,59],1:[6,0,23,59],2:[6,0,23,59],3:[6,0,23,59],4:[6,0,23,59],5:[6,0,23,59],6:[6,0,23,59] },
+    hoursDisplay: "Mon–Sun: 6:00 AM – 12:30 AM" },
+  { label: "Superior Ave — 1802 Superior Ave E, Cleveland", phone: "+1 216-348-0700", dropbox: false,
+    hours: {1:[8,0,18,0],2:[8,0,18,0],3:[8,0,18,0],4:[8,0,18,0],5:[8,0,18,0],6:[9,0,12,0]},
+    hoursDisplay: "Mon–Fri: 8AM–6PM | Sat: 9AM–12PM | Sun: Closed" },
+  { label: "Cleveland Heights — 3200 Mayfield Rd", phone: "+1 216-397-7600", dropbox: true,
+    hours: {1:[8,0,18,0],2:[8,0,18,0],3:[8,0,18,0],4:[8,0,18,0],5:[8,0,18,0],6:[9,0,14,0]},
+    hoursDisplay: "Mon–Fri: 8AM–6PM | Sat: 9AM–2PM | Sun: Closed" },
+  { label: "Brook Park — 13200 Brookpark Rd", phone: "+1 216-351-3344", dropbox: false,
+    hours: {1:[8,0,18,0],2:[8,0,18,0],3:[8,0,18,0],4:[8,0,18,0],5:[8,0,18,0],6:[9,0,14,0]},
+    hoursDisplay: "Mon–Fri: 8AM–6PM | Sat: 9AM–2PM | Sun: Closed" },
+  { label: "Lakewood — 2285 Warren Rd", phone: "+1 216-529-1100", dropbox: false,
+    hours: {1:[8,0,18,0],2:[8,0,18,0],3:[8,0,18,0],4:[8,0,18,0],5:[8,0,18,0],6:[9,0,12,0]},
+    hoursDisplay: "Mon–Fri: 8AM–6PM | Sat: 9AM–12PM | Sun: Closed" },
+  { label: "Bedford — 19550 Rockside Rd", phone: "+1 440-786-8500", dropbox: true,
+    hours: {1:[8,0,18,0],2:[8,0,18,0],3:[8,0,18,0],4:[8,0,18,0],5:[8,0,18,0],6:[9,0,14,0]},
+    hoursDisplay: "Mon–Fri: 8AM–6PM | Sat: 9AM–2PM | Sun: Closed" },
+  { label: "Euclid — 25080 Lakeland Blvd", phone: "+1 216-531-8810", dropbox: false,
+    hours: {1:[8,0,18,0],2:[8,0,18,0],3:[8,0,18,0],4:[8,0,18,0],5:[8,0,18,0],6:[9,0,14,0]},
+    hoursDisplay: "Mon–Fri: 8AM–6PM | Sat: 9AM–2PM | Sun: Closed" },
+  { label: "Parma — 7800 Broadview Rd", phone: "+1 216-573-0535", dropbox: false,
+    hours: {1:[8,0,18,0],2:[8,0,18,0],3:[8,0,18,0],4:[8,0,18,0],5:[8,0,18,0],6:[9,0,12,0]},
+    hoursDisplay: "Mon–Fri: 8AM–6PM | Sat: 9AM–12PM | Sun: Closed" },
+  { label: "University Circle — 1986 Stokes Blvd, Cleveland", phone: "+1 440-823-0644", dropbox: false,
+    hours: {1:[8,0,17,0],2:[8,0,17,0],3:[8,0,17,0],4:[8,0,17,0],5:[8,0,17,0]},
+    hoursDisplay: "Mon–Fri: 8AM–5PM | Sat–Sun: Closed" },
+];
+
+const OTHER = "__other__";
+const pad = n => String(n).padStart(2,"0");
+function fmt(t){ if(!t) return ""; const [h,m]=t.split(":").map(Number); const ap=h>=12?"PM":"AM"; return `${h%12||12}:${pad(m)} ${ap}`; }
+function getMinMax(loc,dateStr){
+  if(!loc||!dateStr) return {min:null,max:null,closed:false,dropboxOk:false};
+  const dow=new Date(dateStr+"T12:00:00").getDay();
+  const h=loc.hours[dow];
+  if(!h) return {min:null,max:null,closed:true,dropboxOk:loc.dropbox};
+  return {min:`${pad(h[0])}:${pad(h[1])}`,max:`${pad(h[2])}:${pad(h[3])}`,closed:false,dropboxOk:loc.dropbox};
+}
+function inRange(t,mn,mx){ return !t||!mn||!mx||(t>=mn&&t<=mx); }
+
+const inputStyle = {
+  width:"100%", boxSizing:"border-box", padding:"8px 12px", fontSize:14,
+  borderRadius:8, border:`1px solid ${G.leaf}44`,
+  background:"#fff", color:G.pine, outline:"none", fontFamily:"inherit"
+};
+const Inp = (props) => <input {...props} style={{...inputStyle, border:`1px solid ${props["data-error"]?"#E24B4A44":G.leaf+"44"}`, ...props.style}} />;
+const Sel = ({children,...p}) => <select {...p} style={{...inputStyle,...p.style}}>{children}</select>;
+
+const LeafIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{display:"inline",verticalAlign:"middle"}}>
+    <path d="M2 14 C4 10 6 6 14 2 C14 2 14 10 8 12 C6 13 4 13 2 14Z" fill={G.leaf} opacity="0.8"/>
+    <line x1="2" y1="14" x2="9" y2="7" stroke={G.bark} strokeWidth="1" strokeLinecap="round"/>
+  </svg>
+);
+
+const Field = ({label,required,children,hint,error}) => (
+  <div style={{marginBottom:14}}>
+    <label style={{display:"flex",alignItems:"center",gap:5,fontSize:12,fontWeight:500,color:G.bark,marginBottom:4,textTransform:"uppercase",letterSpacing:"0.06em"}}>
+      <LeafIcon/> {label}{required&&<span style={{color:"#E24B4A",marginLeft:2}}>*</span>}
+    </label>
+    {children}
+    {error&&<p style={{fontSize:12,color:"#A32D2D",margin:"4px 0 0",paddingLeft:4,borderLeft:`2px solid #E24B4A`}}>{error}</p>}
+    {!error&&hint&&<p style={{fontSize:12,color:G.stone,margin:"4px 0 0"}}>{hint}</p>}
+  </div>
+);
+
+const Section = ({title,icon,children}) => (
+  <div style={{marginBottom:24,background:"#fff",border:`1px solid ${G.leaf}33`,borderRadius:12,overflow:"hidden"}}>
+    <div style={{background:G.moss,padding:"10px 16px",display:"flex",alignItems:"center",gap:8,borderBottom:`1px solid ${G.leaf}33`}}>
+      <span style={{fontSize:16}}>{icon}</span>
+      <h3 style={{margin:0,fontSize:14,fontWeight:500,color:G.pine,letterSpacing:"0.03em"}}>{title}</h3>
+    </div>
+    <div style={{padding:"16px"}}>{children}</div>
+  </div>
+);
+
+const TwoCol = ({children}) => (
+  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>{children}</div>
+);
+
+const HoursTag = ({loc}) => loc ? (
+  <div style={{marginTop:6,padding:"6px 10px",background:G.sand,borderRadius:6,fontSize:12,color:G.trail,border:`1px solid ${G.gold}44`}}>
+    🕐 {loc.hoursDisplay} &nbsp;·&nbsp; 📞 {loc.phone}
+    {loc.dropbox && <span style={{marginLeft:8,background:G.moss,color:G.bark,padding:"1px 7px",borderRadius:10,fontSize:11,fontWeight:500}}>drop box</span>}
+  </div>
+) : null;
+
+const LocationSelect = ({value,onChange}) => {
+  const isOther = value===OTHER||(value&&!LOCATIONS.find(l=>l.label===value));
+  const sel = isOther?OTHER:(value||"");
+  const loc = LOCATIONS.find(l=>l.label===value);
+  return (
+    <div>
+      <Sel value={sel} onChange={e=>onChange(e.target.value===OTHER?OTHER:e.target.value)}>
+        <option value="">Select an Enterprise location...</option>
+        {LOCATIONS.map(l=><option key={l.label} value={l.label}>{l.label}{l.dropbox?" [drop box]":""}</option>)}
+        <option value={OTHER}>Other — type in a location</option>
+      </Sel>
+      {isOther&&<Inp placeholder="Enter Enterprise location name or address" value={value===OTHER?"":value} onChange={e=>onChange(e.target.value)} style={{marginTop:8}}/>}
+      <HoursTag loc={loc}/>
+    </div>
+  );
+};
+
+const WarnBox = ({children}) => (
+  <div style={{background:G.sand,border:`1px solid ${G.gold}66`,borderRadius:8,padding:"8px 12px",fontSize:13,color:G.trail,marginTop:8,display:"flex",gap:8,alignItems:"flex-start"}}>
+    <span style={{fontSize:14,flexShrink:0}}>⚠️</span><span>{children}</span>
+  </div>
+);
+const InfoBox = ({children}) => (
+  <div style={{background:G.moss,border:`1px solid ${G.leaf}66`,borderRadius:8,padding:"8px 12px",fontSize:13,color:G.bark,marginTop:8,display:"flex",gap:8,alignItems:"flex-start"}}>
+    <span style={{fontSize:14,flexShrink:0}}>ℹ️</span><span>{children}</span>
+  </div>
+);
+
+export default function RentalForm() {
+  const [submitted,setSubmitted]=useState(false);
+  const [sameDropoff,setSameDropoff]=useState(true);
+  const [form,setForm]=useState({renterName:"",phone:"",email:"",pickupLocation:"",pickupDate:"",pickupTime:"",dropoffLocation:"",dropoffDate:"",dropoffTime:"",passengers:"",carType:"",addlDriver:"no",notes:""});
+  const set=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const setE=k=>e=>set(k,e.target.value);
+
+  const puLoc=LOCATIONS.find(l=>l.label===form.pickupLocation);
+  const drKey=sameDropoff?form.pickupLocation:form.dropoffLocation;
+  const drLoc=LOCATIONS.find(l=>l.label===drKey);
+  const pu=getMinMax(puLoc,form.pickupDate);
+  const dr=getMinMax(drLoc,form.dropoffDate);
+
+  const pickupErr=(()=>{
+    if(!form.pickupTime||!form.pickupDate||!puLoc) return null;
+    if(pu.closed) return "This location is closed on the selected day.";
+    if(!inRange(form.pickupTime,pu.min,pu.max)) return `Pick-up must be between ${fmt(pu.min)} and ${fmt(pu.max)}.`;
+    return null;
+  })();
+
+  const dropoffErr=(()=>{
+    if(!form.dropoffTime||!form.dropoffDate||!drLoc) return null;
+    if(dr.closed&&dr.dropboxOk) return null;
+    if(dr.closed) return "This location is closed on the selected drop-off day and has no drop box.";
+    if(!inRange(form.dropoffTime,dr.min,dr.max)&&dr.dropboxOk) return null;
+    if(!inRange(form.dropoffTime,dr.min,dr.max)) return `Drop-off must be between ${fmt(dr.min)} and ${fmt(dr.max)} (no drop box).`;
+    return null;
+  })();
+
+  const dropoffInfo=(()=>{
+    if(!form.dropoffTime||!form.dropoffDate||!drLoc) return null;
+    if(dr.closed&&dr.dropboxOk) return "Location closed this day, but a drop box is available for after-hours return.";
+    if(!dr.closed&&!inRange(form.dropoffTime,dr.min,dr.max)&&dr.dropboxOk) return "Outside operating hours — drop box available for after-hours return.";
+    return null;
+  })();
+
+  const effDropoff=sameDropoff?form.pickupLocation:form.dropoffLocation;
+  const body=[
+    "ENTERPRISE RENTAL CAR REQUEST","",
+    "RENTER INFORMATION",`Name: ${form.renterName}`,`Phone: ${form.phone}`,`Email: ${form.email}`,"",
+    "PICK-UP DETAILS",`Location: ${form.pickupLocation}`,`Date: ${form.pickupDate}`,`Time: ${fmt(form.pickupTime)}`,"",
+    "DROP-OFF DETAILS",`Location: ${effDropoff}`,`Date: ${form.dropoffDate}`,`Time: ${fmt(form.dropoffTime)}`,"",
+    "VEHICLE DETAILS",`Car type: ${form.carType}`,`Passengers: ${form.passengers}`,`Additional driver: ${form.addlDriver==="yes"?"Yes (register at pickup)":"No"}`,
+    form.notes?`\nNOTES\n${form.notes}`:"",
+  ].join("\n");
+  const mailto=`mailto:jhughes@holdenfg.org?subject=${encodeURIComponent("Enterprise Rental Car Request — "+form.renterName)}&body=${encodeURIComponent(body)}`;
+
+  const reqFields=["renterName","phone","email","pickupLocation","pickupDate","pickupTime","dropoffDate","dropoffTime","carType","passengers"];
+  const drOk=sameDropoff?true:!!form.dropoffLocation;
+  const isComplete=reqFields.every(k=>form[k])&&drOk&&!pickupErr&&!dropoffErr;
+
+  if(submitted) return (
+    <div style={{maxWidth:560,margin:"0 auto",padding:"2rem 1rem",textAlign:"center"}}>
+      <div style={{width:64,height:64,borderRadius:"50%",background:G.moss,border:`2px solid ${G.leaf}`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px",fontSize:28}}>🌲</div>
+      <h2 style={{margin:"0 0 8px",fontSize:18,fontWeight:500,color:G.pine}}>Request ready to send</h2>
+      <p style={{color:G.stone,fontSize:14,margin:"0 0 24px"}}>Your rental request is packed and ready to go. Click below, then click Send in your email client.</p>
+      <a href={mailto} style={{display:"inline-block",padding:"11px 28px",borderRadius:8,background:G.bark,color:"#fff",fontWeight:500,fontSize:14,textDecoration:"none",letterSpacing:"0.02em"}}>Send request →</a>
+      <div style={{marginTop:12}}>
+        <button onClick={()=>{setSubmitted(false);setForm({renterName:"",phone:"",email:"",pickupLocation:"",pickupDate:"",pickupTime:"",dropoffLocation:"",dropoffDate:"",dropoffTime:"",passengers:"",carType:"",addlDriver:"no",notes:""});setSameDropoff(true);}} style={{background:"none",border:"none",color:G.stone,fontSize:13,cursor:"pointer"}}>Submit another request</button>
+      </div>
+      <div style={{marginTop:24,textAlign:"left",background:G.pebble,borderRadius:10,padding:"14px 16px",border:`1px solid ${G.leaf}33`}}>
+        <p style={{fontSize:11,fontWeight:500,color:G.stone,margin:"0 0 8px",textTransform:"uppercase",letterSpacing:"0.08em"}}>Email preview</p>
+        <pre style={{fontSize:12,color:G.pine,margin:0,whiteSpace:"pre-wrap",fontFamily:"monospace"}}>{body}</pre>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{maxWidth:600,margin:"0 auto",padding:"1rem 0"}}>
+      <div style={{background:G.bark,borderRadius:14,padding:"20px 24px",marginBottom:24,display:"flex",alignItems:"center",gap:16}}>
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="24" fill={G.leaf} opacity="0.2"/>
+          <polygon points="24,6 30,22 24,18 18,22" fill="#fff"/>
+          <polygon points="24,16 32,34 24,28 16,34" fill={G.moss}/>
+          <rect x="22" y="34" width="4" height="6" fill={G.gold} rx="2"/>
+          <path d="M8 40 Q12 36 16 38 Q20 40 24 38 Q28 36 32 38 Q36 40 40 40" stroke={G.moss} strokeWidth="1.5" fill="none" opacity="0.6"/>
+        </svg>
+        <div>
+          <h2 style={{margin:"0 0 3px",fontSize:20,fontWeight:500,color:"#fff"}}>Enterprise rental car request</h2>
+          <p style={{margin:0,fontSize:13,color:`${G.moss}cc`}}>Holden Forests & Gardens — vehicle reservation form</p>
+        </div>
+      </div>
+
+      <Section title="Renter information" icon="🧭">
+        <TwoCol>
+          <Field label="Full name" required><Inp placeholder="Jane Smith" value={form.renterName} onChange={setE("renterName")}/></Field>
+          <Field label="Phone number" required><Inp type="tel" placeholder="(555) 000-0000" value={form.phone} onChange={setE("phone")}/></Field>
+        </TwoCol>
+        <Field label="Email address" required><Inp type="email" placeholder="jane@holdenforests.org" value={form.email} onChange={setE("email")}/></Field>
+      </Section>
+
+      <Section title="Pick-up details" icon="🌄">
+        <Field label="Pick-up location" required>
+          <LocationSelect value={form.pickupLocation} onChange={v=>set("pickupLocation",v)}/>
+        </Field>
+        <TwoCol>
+          <Field label="Pick-up date" required>
+            <Inp type="date" value={form.pickupDate} onChange={setE("pickupDate")}/>
+            {form.pickupDate&&puLoc&&pu.closed&&<WarnBox>Closed on this day — pick another date.</WarnBox>}
+          </Field>
+          <Field label="Pick-up time" required error={pickupErr} hint={puLoc&&!pu.closed&&pu.min?`Hours: ${fmt(pu.min)} – ${fmt(pu.max)}`:null}>
+            <Inp type="time" value={form.pickupTime} onChange={setE("pickupTime")} data-error={!!pickupErr} min={pu.min||undefined} max={pu.max||undefined}/>
+          </Field>
+        </TwoCol>
+      </Section>
+
+      <Section title="Drop-off details" icon="🏕️">
+        <Field label="Drop-off location" required>
+          <label style={{display:"flex",alignItems:"center",gap:8,fontSize:13,color:G.bark,cursor:"pointer",marginBottom:8,fontWeight:"normal",textTransform:"none",letterSpacing:"normal"}}>
+            <input type="checkbox" checked={sameDropoff} onChange={e=>setSameDropoff(e.target.checked)} style={{width:15,height:15,accentColor:G.bark}}/>
+            Same as pick-up location
+          </label>
+          {!sameDropoff&&<LocationSelect value={form.dropoffLocation} onChange={v=>set("dropoffLocation",v)}/>}
+        </Field>
+        <TwoCol>
+          <Field label="Drop-off date" required>
+            <Inp type="date" value={form.dropoffDate} onChange={setE("dropoffDate")}/>
+            {form.dropoffDate&&drLoc&&dr.closed&&!dr.dropboxOk&&<WarnBox>Closed this day, no drop box.</WarnBox>}
+          </Field>
+          <Field label="Drop-off time" required error={dropoffErr} hint={drLoc&&!dr.closed&&dr.min?`Hours: ${fmt(dr.min)} – ${fmt(dr.max)}${dr.dropboxOk?" · drop box avail.":""}`:null}>
+            <Inp type="time" value={form.dropoffTime} onChange={setE("dropoffTime")} data-error={!!dropoffErr}/>
+          </Field>
+        </TwoCol>
+        {dropoffInfo&&<InfoBox>{dropoffInfo}</InfoBox>}
+      </Section>
+
+      <Section title="Vehicle details" icon="🚙">
+        <TwoCol>
+          <Field label="Car type" required>
+            <Sel value={form.carType} onChange={setE("carType")}>
+              <option value="">Select type...</option>
+              <option>Car (standard)</option><option>SUV</option><option>Minivan</option><option>Truck</option>
+            </Sel>
+          </Field>
+          <Field label="Passengers" required>
+            <Sel value={form.passengers} onChange={setE("passengers")}>
+              <option value="">Select...</option>
+              {[1,2,3,4,5,6,7,8].map(n=><option key={n}>{n}</option>)}
+            </Sel>
+          </Field>
+        </TwoCol>
+        <Field label="Additional driver?" hint="May incur extra charges — register at pickup">
+          <Sel value={form.addlDriver} onChange={setE("addlDriver")}>
+            <option value="no">No</option>
+            <option value="yes">Yes — will register at pickup</option>
+          </Sel>
+        </Field>
+      </Section>
+
+      <div style={{marginBottom:20}}>
+        <Field label="Additional notes">
+          <textarea value={form.notes} onChange={setE("notes")} placeholder="Special requests, travel details, etc." rows={3}
+            style={{...inputStyle,resize:"vertical",fontFamily:"inherit"}}/>
+        </Field>
+      </div>
+
+      <div style={{background:G.moss,border:`1px solid ${G.leaf}55`,borderRadius:10,padding:"10px 14px",fontSize:13,color:G.bark,marginBottom:16,display:"flex",gap:10}}>
+        <span style={{fontSize:16,flexShrink:0}}>🌿</span>
+        <span><strong>Reminders:</strong> Pick-up must be within operating hours. Drop-off can be after hours at locations with a drop box. Adding extra drivers may incur charges. You'll get a confirmation email once reserved.</span>
+      </div>
+      <div style={{background:G.sand,border:`1px solid ${G.gold}55`,borderRadius:10,padding:"10px 14px",fontSize:13,color:G.trail,marginBottom:20,display:"flex",gap:10}}>
+        <span style={{fontSize:16,flexShrink:0}}>📧</span>
+        <span><strong>How to submit:</strong> After completing the form, click <strong>"Review & send request"</strong> below, then click <strong>"Send request"</strong> on the next page. Your email client will open with all reservation details already filled in — all you have to do is click <strong>Send</strong>.</span>
+      </div>
+
+      <button onClick={()=>isComplete&&setSubmitted(true)} disabled={!isComplete}
+        style={{width:"100%",padding:"13px",borderRadius:10,border:"none",background:isComplete?G.bark:G.pebble,color:isComplete?"#fff":G.stone,fontWeight:500,fontSize:15,cursor:isComplete?"pointer":"not-allowed",letterSpacing:"0.02em",transition:"background 0.2s"}}>
+        {isComplete?"Review & send request →":"Complete all required fields to continue"}
+      </button>
+    </div>
+  );
+}
